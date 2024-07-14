@@ -6,15 +6,17 @@
   gap: 30px;
   align-items: center;
   padding: 30px;
+  overflow-x: auto;
 }
 
 .scroll-item {
-  background-color: brown;
-  width: 185px;
+  background-color: red;
+  max-width: 185px;
+  min-width: 185px;
   height: 160px;
 }
 
 .scroll-item[data-focused="true"] {
-  background-color: black;
+  background-color: green;
   transform: scale(1.1);
 }
