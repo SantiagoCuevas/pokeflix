@@ -51,6 +51,14 @@ describe("useGridManager", () => {
 
       expect(typeof moveDown).toBe("function");
     });
+
+    it("returns a setScrollCount callback", () => {
+      const { result } = renderHook(() => useGridManager());
+
+      const { setScrollCount } = result.current;
+
+      expect(typeof setScrollCount).toBe("function");
+    });
   });
 
   describe("navigation", () => {
@@ -250,6 +258,85 @@ describe("useGridManager", () => {
           expect(result.current.xIndex).toBe(maxIndex);
         });
       });
+    });
+  });
+
+  describe("scrolled navigation", () => {
+    it("moves down to the correct x index between two scrolled lanes", () => {
+      const { result } = renderHook(() => useGridManager());
+
+      act(() => {
+        result.current.moveRight();
+      });
+
+      act(() => {
+        result.current.moveRight();
+      });
+
+      act(() => {
+        result.current.moveRight();
+      });
+
+      act(() => {
+        result.current.moveRight();
+      });
+
+      act(() => {
+        result.current.setScrollCount(0, 1);
+        result.current.setScrollCount(1, 4);
+      });
+
+      act(() => {
+        result.current.moveDown();
+      });
+
+      expect(result.current.xIndex).toBe(7);
+    });
+
+    it("moves up to the correct x index between two scrolled lanes", () => {
+      const { result } = renderHook(() => useGridManager());
+
+      act(() => {
+        result.current.moveDown();
+      });
+
+      act(() => {
+        result.current.moveRight();
+      });
+
+      act(() => {
+        result.current.moveRight();
+      });
+
+      act(() => {
+        result.current.moveRight();
+      });
+
+      act(() => {
+        result.current.moveRight();
+      });
+      act(() => {
+        result.current.moveRight();
+      });
+
+      act(() => {
+        result.current.moveRight();
+      });
+
+      act(() => {
+        result.current.moveRight();
+      });
+
+      act(() => {
+        result.current.setScrollCount(0, 1);
+        result.current.setScrollCount(1, 4);
+      });
+
+      act(() => {
+        result.current.moveUp();
+      });
+
+      expect(result.current.xIndex).toBe(4);
     });
   });
 });
