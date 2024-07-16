@@ -1,5 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { useGridManager } from "../useGridManager";
+import { WrapBehavior } from "../../../types/WrapBehavior";
 
 describe("useGridManager", () => {
   describe("return values", () => {
@@ -69,15 +70,15 @@ describe("useGridManager", () => {
         const maxIndex = 1;
 
         act(() => {
-          result.current.moveRight(maxIndex);
+          result.current.moveRight({ maxIndex });
         });
 
         act(() => {
-          result.current.moveRight(maxIndex);
+          result.current.moveRight({ maxIndex });
         });
 
         act(() => {
-          result.current.moveRight(maxIndex);
+          result.current.moveRight({ maxIndex });
         });
 
         expect(result.current.xIndex).toBe(maxIndex);
@@ -130,15 +131,15 @@ describe("useGridManager", () => {
         const maxIndex = 1;
 
         act(() => {
-          result.current.moveDown(maxIndex);
+          result.current.moveDown({ maxIndex });
         });
 
         act(() => {
-          result.current.moveDown(maxIndex);
+          result.current.moveDown({ maxIndex });
         });
 
         act(() => {
-          result.current.moveDown(maxIndex);
+          result.current.moveDown({ maxIndex });
         });
 
         expect(result.current.yIndex).toBe(maxIndex);
@@ -172,6 +173,82 @@ describe("useGridManager", () => {
         });
 
         expect(result.current.yIndex).toBe(0);
+      });
+    });
+
+    describe("wrapping navigation behavior", () => {
+      describe("horizontal looping", () => {
+        it("does not allow wrapping when moving right by default", () => {
+          const { result } = renderHook(() => useGridManager());
+          const maxIndex = 1;
+
+          act(() => {
+            result.current.moveRight({ maxIndex });
+          });
+
+          act(() => {
+            result.current.moveRight({ maxIndex });
+          });
+
+          act(() => {
+            result.current.moveRight({ maxIndex });
+          });
+
+          expect(result.current.xIndex).toBe(maxIndex);
+        });
+
+        it("wraps to the front when moving off the right edge", () => {
+          const { result } = renderHook(() => useGridManager());
+          const maxIndex = 1;
+
+          act(() => {
+            result.current.moveRight({
+              maxIndex,
+              wrapBehavior: WrapBehavior.LOOP,
+            });
+          });
+
+          act(() => {
+            result.current.moveRight({
+              maxIndex,
+              wrapBehavior: WrapBehavior.LOOP,
+            });
+          });
+
+          expect(result.current.xIndex).toBe(0);
+        });
+
+        it("does not allow wrapping when moving left by default", () => {
+          const { result } = renderHook(() => useGridManager());
+
+          act(() => {
+            result.current.moveLeft();
+          });
+
+          act(() => {
+            result.current.moveLeft();
+          });
+
+          act(() => {
+            result.current.moveLeft();
+          });
+
+          expect(result.current.xIndex).toBe(0);
+        });
+
+        it("wraps to the right edge when moving off the left edge", () => {
+          const { result } = renderHook(() => useGridManager());
+          const maxIndex = 3;
+
+          act(() => {
+            result.current.moveLeft({
+              maxIndex,
+              wrapBehavior: WrapBehavior.LOOP,
+            });
+          });
+
+          expect(result.current.xIndex).toBe(maxIndex);
+        });
       });
     });
   });
