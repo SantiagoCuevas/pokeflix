@@ -18,5 +18,37 @@ describe("useGridManager", () => {
 
       expect(yIndex).toBe(0);
     });
+
+    it("returns a move right callback", () => {
+      const { result } = renderHook(() => useGridManager());
+
+      const { moveRight } = result.current;
+
+      expect(typeof moveRight).toBe("function");
+    });
+
+    it("returns a move left callback", () => {
+      const { result } = renderHook(() => useGridManager());
+
+      const { moveLeft } = result.current;
+
+      expect(typeof moveLeft).toBe("function");
+    });
+
+    it("returns a move up callback", () => {
+      const { result } = renderHook(() => useGridManager());
+
+      const { moveUp } = result.current;
+
+      expect(typeof moveUp).toBe("function");
+    });
+
+    it("returns a move down callback", () => {
+      const { result } = renderHook(() => useGridManager());
+
+      const { moveDown } = result.current;
+
+      expect(typeof moveDown).toBe("function");
+    });
   });
 });
