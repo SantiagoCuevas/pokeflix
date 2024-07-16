@@ -1,8 +1,22 @@
+body {
+  margin: 0; /* remove default margin */
+  scrollbar-width: none; /* Also needed to disable scrollbar Firefox */
+  -ms-overflow-style: none; /* Disable scrollbar IE 10+ */
+  overflow-y: scroll;
+}
+body::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* Disable scrollbar Chrome/Safari/Webkit */
+}
+
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  overflow: auto;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* make scrollbar transparent */
+  display: none;
 }
 
 .logo {
@@ -39,4 +53,11 @@
 
 .read-the-docs {
   color: #888;
+}
+
+@-moz-document url-prefix() {
+  html,
+  body {
+    overflow: hidden !important;
+  }
 }
