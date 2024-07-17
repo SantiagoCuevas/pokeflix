@@ -5,12 +5,13 @@ import { useGridManager } from "./hooks/useGridManager/useGridManager";
 import { useKeys } from "./hooks/useKeys/useKeys";
 import { Keys } from "./types/Keys";
 import { PokeBanner } from "./components/PokeBanner/PokeBanner";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePokemonData } from "./hooks/usePokemonData/usePokemonData";
+import { Pokemon } from "./types/Pokemon";
 
 function App() {
   const data = usePokemonData();
-  const [activePokemon, setActivePokemon] = useState<any>(null);
+  const [activePokemon, setActivePokemon] = useState<Pokemon | undefined>();
   const [activeGeneration, setActiveGeneration] = useState(1);
   const [ttsEnabled, setTtsEnabled] = useState(false);
   const {
@@ -26,38 +27,42 @@ function App() {
   const scrollInProgressRef = useRef(false);
   const [loading, setLoading] = useState(true);
 
-  useKeys({
-    handlers: {
-      [Keys.UP]: () => {
-        if (scrollInProgressRef.current) {
-          return;
-        }
+  const keyHandlers = useMemo(
+    () => ({
+      handlers: {
+        [Keys.UP]: () => {
+          if (scrollInProgressRef.current) {
+            return;
+          }
 
-        if (yIndex === 0 && !bannerFocused) {
-          setBannerFocused(true);
-          return;
-        }
+          if (yIndex === 0 && !bannerFocused) {
+            setBannerFocused(true);
+            return;
+          }
 
-        moveUp();
-        const nextActGen = activeGeneration - 1;
-        setActiveGeneration(nextActGen < 1 ? activeGeneration : nextActGen);
+          moveUp();
+          const nextActGen = activeGeneration - 1;
+          setActiveGeneration(nextActGen < 1 ? activeGeneration : nextActGen);
+        },
+        [Keys.DOWN]: () => {
+          if (scrollInProgressRef.current || !data?.length) {
+            return;
+          }
+          moveDown({
+            maxIndex: data.length - 1,
+          });
+          const nextActGen = activeGeneration + 1;
+          setActiveGeneration(
+            nextActGen > data.length ? activeGeneration : nextActGen
+          );
+        },
       },
-      [Keys.DOWN]: () => {
-        if (scrollInProgressRef.current || !data?.length) {
-          return;
-        }
-        moveDown({
-          maxIndex: data.length - 1,
-        });
-        const nextActGen = activeGeneration + 1;
-        setActiveGeneration(
-          nextActGen > data.length ? activeGeneration : nextActGen
-        );
-      },
-    },
-  });
+    }),
+    [activeGeneration, bannerFocused, data?.length, moveDown, moveUp, yIndex]
+  );
+  useKeys(keyHandlers);
 
-  const scroll = (reverse: boolean = false) => {
+  const scroll = useCallback((reverse: boolean = false) => {
     window.scrollBy({
       top: reverse ? -280 : 280,
       behavior: "smooth",
@@ -67,7 +72,7 @@ function App() {
     setTimeout(() => {
       scrollInProgressRef.current = false;
     }, 350);
-  };
+  }, []);
 
   // False loading state for visual effect
   useEffect(() => {
