@@ -113,7 +113,6 @@ export const ScrollList = (props: ScrollListProps) => {
             key={item.id}
             title={item?.name ? item.name : "not working"}
             focused={focused && activeXIndex === i}
-            yIndex={yIndex}
             pk={list[i]}
             setActivePokemon={setActivePokemon}
             ttsEnabled={ttsEnabled}
