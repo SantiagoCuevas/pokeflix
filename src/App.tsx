@@ -33,7 +33,7 @@ function App() {
           return;
         }
 
-        if (xIndex === 0 && !bannerFocused) {
+        if (yIndex === 0 && !bannerFocused) {
           setBannerFocused(true);
           return;
         }
