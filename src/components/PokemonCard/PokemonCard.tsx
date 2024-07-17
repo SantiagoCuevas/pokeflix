@@ -1,32 +1,30 @@
+import "./PokemonCard.css";
+import { Pokemon } from "../../types/Pokemon";
+import pokeLoader from "../../assets/pokeloader.gif";
 import { useEffect, useMemo, useRef } from "react";
-import { useWindowSize } from "../../hooks/useWindowSize/useWindowSize";
 import { useKeys } from "../../hooks/useKeys/useKeys";
 import { Keys } from "../../types/Keys";
-import pokeLoader from "../../assets/pokeloader.gif";
+import { useObserver } from "../../hooks/useObserver/useObserver";
 
-export interface ScrollItemProps {
+interface PokemonCardProps {
   title: string;
-  yIndex: number;
   focused?: boolean;
   pk: any;
-  setActivePokemon: (pk: any) => void;
+  setActivePokemon: (pk: Pokemon) => void;
   scroll: (reverse: boolean) => void;
   ttsEnabled?: boolean;
 }
 
-export const ScrollItem = (props: ScrollItemProps) => {
+export const PokemonCard = (props: PokemonCardProps) => {
   const {
     title,
     focused = false,
-    yIndex,
     scroll,
     setActivePokemon,
     pk,
     ttsEnabled = false,
   } = props;
-  const ref = useRef<null | HTMLDivElement>(null);
   const scrollStartedRef = useRef(false);
-  const { width: windowWidth } = useWindowSize();
   const imgRef = useRef<HTMLImageElement>(null);
 
   const keyHandlers = useMemo(
@@ -50,41 +48,11 @@ export const ScrollItem = (props: ScrollItemProps) => {
   );
 
   useKeys(keyHandlers);
-
-  useEffect(() => {
-    if (focused) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting && focused) {
-              const { boundingClientRect } = entry;
-              if (boundingClientRect.right > windowWidth) {
-                if (!scrollStartedRef.current) {
-                  scroll(false);
-                }
-              } else if (focused) {
-                if (!scrollStartedRef.current) {
-                  scroll(true);
-                }
-              }
-              scrollStartedRef.current = true;
-            }
-          });
-        },
-        { root: null, rootMargin: "0px", threshold: 1.0 }
-      );
-
-      if (ref.current) {
-        observer.observe(ref.current);
-      }
-
-      return () => {
-        if (ref.current) {
-          observer.unobserve(ref.current);
-        }
-      };
-    }
-  }, [focused, scroll, windowWidth, yIndex]);
+  const entryRef = useObserver({
+    focused,
+    scrollParent: scroll,
+    isVertical: false,
+  });
 
   useEffect(() => {
     scrollStartedRef.current = false;
@@ -101,10 +69,10 @@ export const ScrollItem = (props: ScrollItemProps) => {
   }, [focused, pk, setActivePokemon, ttsEnabled]);
 
   return (
-    <div ref={ref} className="scroll-item" data-focused={focused}>
+    <div ref={entryRef} className="pokemon-card" data-focused={focused}>
       <img
         src={pokeLoader}
-        className="scroll-item-image"
+        className="pokemon-card-image"
         ref={imgRef}
         onLoad={() => {
           if (!imgRef.current) {

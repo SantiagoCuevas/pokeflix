@@ -6,6 +6,7 @@ import { useKeys } from "../../hooks/useKeys/useKeys";
 import { useCallback, useMemo, useRef } from "react";
 import { Pokemon } from "../../types/Pokemon";
 import { useObserver } from "../../hooks/useObserver/useObserver";
+import { PokemonCard } from "../PokemonCard/PokemonCard";
 
 interface ScrollListProps {
   list: Pokemon[];
@@ -107,7 +108,7 @@ export const ScrollList = (props: ScrollListProps) => {
     <>
       <div className="scroll-list" ref={entryRef}>
         {list.map((item, i) => (
-          <ScrollItem
+          <PokemonCard
             scroll={scroll}
             key={item.id}
             title={item?.name ? item.name : "not working"}
