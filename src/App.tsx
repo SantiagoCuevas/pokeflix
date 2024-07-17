@@ -5,12 +5,13 @@ import { useGridManager } from "./hooks/useGridManager/useGridManager";
 import { useKeys } from "./hooks/useKeys/useKeys";
 import { Keys } from "./types/Keys";
 import { PokeBanner } from "./components/PokeBanner/PokeBanner";
-import { act, useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePokemonData } from "./hooks/usePokemonData/usePokemonData";
 
 function App() {
   const data: null | any[] = usePokemonData();
   const [activePokemon, setActivePokemon] = useState<any>(null);
+  const [activeGeneration, setActiveGeneration] = useState(1);
   const [ttsEnabled, setTtsEnabled] = useState(false);
   const {
     yIndex,
@@ -23,20 +24,7 @@ function App() {
   } = useGridManager();
   const scrollInProgressRef = useRef(false);
   const [loading, setLoading] = useState(true);
-  const arr = [
-    { title: "Jason" },
-    { title: "Zac" },
-    { title: "Bambi" },
-    { title: "Kiki" },
-    { title: "Dmi" },
-    { title: "Jordan" },
-    { title: "Giorgos" },
-    { title: "Kiara" },
-    { title: "Oscar" },
-    { title: "Henry" },
-    { title: "Jesus" },
-  ];
-  const lists = [arr, arr, arr, arr, arr];
+
   useKeys({
     handlers: {
       [Keys.UP]: () => {
@@ -44,21 +32,27 @@ function App() {
           return;
         }
         moveUp();
+        const nextActGen = activeGeneration - 1;
+        setActiveGeneration(nextActGen < 1 ? activeGeneration : nextActGen);
       },
       [Keys.DOWN]: () => {
-        if (scrollInProgressRef.current) {
+        if (scrollInProgressRef.current || !data?.length) {
           return;
         }
         moveDown({
-          maxIndex: lists.length - 1,
+          maxIndex: data.length - 1,
         });
+        const nextActGen = activeGeneration + 1;
+        setActiveGeneration(
+          nextActGen > data.length ? activeGeneration : nextActGen
+        );
       },
     },
   });
 
   const scroll = (reverse: boolean = false) => {
     window.scrollBy({
-      top: reverse ? -(240 + 20) : 240 + 20,
+      top: reverse ? -280 : 280,
       behavior: "smooth",
     });
     // throttle keys to avoid bad state
@@ -77,14 +71,35 @@ function App() {
 
   useEffect(() => {
     console.log("new active pokemon", activePokemon?.stats);
+    console.log("zz data", data);
   }, [activePokemon]);
+
+  const sortedPokemonLists = useMemo(
+    () =>
+      data?.map((list) =>
+        list.sort((a, b) => {
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        })
+      ),
+    [data]
+  );
 
   return (
     <>
-      <PokeBanner pk={activePokemon} />
+      <PokeBanner
+        loading={loading}
+        pk={activePokemon}
+        activeGeneration={activeGeneration}
+      />
       <div className="page-container">
         {!loading &&
-          data?.map((list: any, i: number) => (
+          sortedPokemonLists?.map((list: any, i: number) => (
             <ScrollList
               key={`generation-list`}
               list={list}
@@ -101,7 +116,7 @@ function App() {
               ttsEnabled={ttsEnabled}
             />
           ))}
-        <div style={{ height: 320, width: "100%" }} />
+        <div style={{ height: 280, width: 10 }} />
       </div>
     </>
   );

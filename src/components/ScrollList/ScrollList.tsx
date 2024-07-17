@@ -132,20 +132,22 @@ export const ScrollList = (props: ScrollListProps) => {
   }, [focused]);
 
   return (
-    <div className="scroll-list" ref={scrollDivRef}>
-      {list.map((item, i) => (
-        <ScrollItem
-          scroll={scroll}
-          key={`${item?.name ? item.name : "not working"}`}
-          title={item?.name ? item.name : "not working"}
-          focused={focused && xIndex === i}
-          yIndex={yIndex}
-          pk={list[i]}
-          setActivePokemon={setActivePokemon}
-          ttsEnabled={ttsEnabled}
-        />
-      ))}
-      <div style={{ minWidth: 100, height: 200 }} />
-    </div>
+    <>
+      <div className="scroll-list" ref={scrollDivRef}>
+        {list.map((item, i) => (
+          <ScrollItem
+            scroll={scroll}
+            key={`gen-${yIndex}-${item?.name}`}
+            title={item?.name ? item.name : "not working"}
+            focused={focused && xIndex === i}
+            yIndex={yIndex}
+            pk={list[i]}
+            setActivePokemon={setActivePokemon}
+            ttsEnabled={ttsEnabled}
+          />
+        ))}
+        <div style={{ minWidth: 100, height: 200 }} />
+      </div>
+    </>
   );
 };
