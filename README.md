@@ -8,6 +8,8 @@ PokeFlix is a [Pokedex](https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9dex) ap
 
 You can try out PokeFlix [here.](https://main--magenta-pavlova-6f3755.netlify.app/)
 
+**Note - This application is non-responsive and is meant to be viewed on a laptop or desktop computer with a monitor**
+
 ## Controls
 
 PokeFlix is meant to be used like an application on a smart TV. Use the arrow keys and the enter button to simulate the remote. Pokemon buttons can be selected to hear their sounds. Navigate up to the "text to speech mode" toggle and select it to toggle the mode on and off. The text to speech mode was built to simulate a rudimentary version of the accessibility options found on TVs and other devices.
