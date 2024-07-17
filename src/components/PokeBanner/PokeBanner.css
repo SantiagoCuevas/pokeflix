@@ -80,3 +80,18 @@
   flex-direction: column;
   gap: 4px;
 }
+
+.tts-toggle {
+  margin-top: 20px;
+  background-color: #dedede;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  border-radius: 12px;
+}
+
+.tts-toggle[data-focused="true"] {
+  background-color: #56b163;
+}

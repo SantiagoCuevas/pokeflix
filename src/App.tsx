@@ -22,6 +22,7 @@ function App() {
     moveDown,
     setScrollCount,
   } = useGridManager();
+  const [bannerFocused, setBannerFocused] = useState(false);
   const scrollInProgressRef = useRef(false);
   const [loading, setLoading] = useState(true);
 
@@ -31,6 +32,12 @@ function App() {
         if (scrollInProgressRef.current) {
           return;
         }
+
+        if (xIndex === 0 && !bannerFocused) {
+          setBannerFocused(true);
+          return;
+        }
+
         moveUp();
         const nextActGen = activeGeneration - 1;
         setActiveGeneration(nextActGen < 1 ? activeGeneration : nextActGen);
@@ -69,11 +76,6 @@ function App() {
     }, 1000);
   }, []);
 
-  useEffect(() => {
-    console.log("new active pokemon", activePokemon?.stats);
-    console.log("zz data", data);
-  }, [activePokemon]);
-
   const sortedPokemonLists = useMemo(
     () =>
       data?.map((list) =>
@@ -96,6 +98,10 @@ function App() {
         loading={loading}
         pk={activePokemon}
         activeGeneration={activeGeneration}
+        ttsEnabled={ttsEnabled}
+        focused={bannerFocused}
+        setBannerFocused={setBannerFocused}
+        setTtsEnabled={setTtsEnabled}
       />
       <div className="page-container">
         {!loading &&
@@ -103,7 +109,7 @@ function App() {
             <ScrollList
               key={`generation-list`}
               list={list}
-              focused={i === yIndex && !loading}
+              focused={i === yIndex && !bannerFocused && !loading}
               xIndex={xIndex}
               yIndex={i}
               itemWidth={350}
