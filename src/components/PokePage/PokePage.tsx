@@ -115,7 +115,7 @@ export const PokePage = () => {
               key={`generation-list`}
               list={list}
               focused={i === yIndex && !bannerFocused && !loading}
-              xIndex={xIndex}
+              activeXIndex={xIndex}
               yIndex={i}
               itemWidth={350}
               gapSize={20}

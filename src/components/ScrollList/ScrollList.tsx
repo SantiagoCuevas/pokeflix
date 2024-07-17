@@ -5,10 +5,11 @@ import { NavigationOptions } from "../../hooks/useGridManager/useGridManager";
 import { useKeys } from "../../hooks/useKeys/useKeys";
 import { useEffect, useRef } from "react";
 import { useWindowSize } from "../../hooks/useWindowSize/useWindowSize";
+import { Pokemon } from "../../types/Pokemon";
 
 interface ScrollListProps {
-  list: { title: string }[];
-  xIndex: number;
+  list: Pokemon[];
+  activeXIndex: number;
   yIndex: number;
   itemWidth: number;
   gapSize: number;
@@ -26,7 +27,7 @@ export const ScrollList = (props: ScrollListProps) => {
   const {
     list,
     focused = false,
-    xIndex,
+    activeXIndex,
     yIndex,
     itemWidth,
     gapSize,
@@ -134,12 +135,12 @@ export const ScrollList = (props: ScrollListProps) => {
   return (
     <>
       <div className="scroll-list" ref={scrollDivRef}>
-        {list.map((item: any, i) => (
+        {list.map((item, i) => (
           <ScrollItem
             scroll={scroll}
-            key={`gen-${yIndex}-${item?.name}`}
+            key={item.id}
             title={item?.name ? item.name : "not working"}
-            focused={focused && xIndex === i}
+            focused={focused && activeXIndex === i}
             yIndex={yIndex}
             pk={list[i]}
             setActivePokemon={setActivePokemon}
