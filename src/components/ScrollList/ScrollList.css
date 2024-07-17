@@ -1,9 +1,9 @@
 .scroll-list {
   display: flex;
   flex-direction: row;
+  gap: 20px;
   height: 300px;
   width: 100vw;
-  gap: 20px;
   background-color: aqua;
   align-items: center;
   scrollbar-width: none;
@@ -29,6 +29,9 @@
   height: 125px;
   transition: transform 0.25s linear;
   border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .scroll-item[data-focused="true"] {

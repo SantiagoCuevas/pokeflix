@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { WrapBehavior } from "../../types/WrapBehavior";
 
-interface NavigationOptions {
+export interface NavigationOptions {
   maxIndex?: number;
   wrapBehavior?: WrapBehavior;
 }
@@ -63,8 +63,8 @@ export const useGridManager = () => {
       setYIndex(yIndex + 1);
       const fromScrollCount = scrollCacheRef.current[yIndex] || 0;
       const toScrollCount = scrollCacheRef.current[nextYIndex] || 0;
-
-      setXIndex(xIndex - fromScrollCount + toScrollCount);
+      const result = xIndex - fromScrollCount + toScrollCount;
+      setXIndex(result);
     }
   };
 
