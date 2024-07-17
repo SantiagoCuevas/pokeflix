@@ -3,9 +3,9 @@ import "./ScrollList.css";
 import { Keys } from "../../types/Keys";
 import { NavigationOptions } from "../../hooks/useGridManager/useGridManager";
 import { useKeys } from "../../hooks/useKeys/useKeys";
-import { useEffect, useRef } from "react";
-import { useWindowSize } from "../../hooks/useWindowSize/useWindowSize";
+import { useCallback, useMemo, useRef } from "react";
 import { Pokemon } from "../../types/Pokemon";
+import { useObserver } from "../../hooks/useObserver/useObserver";
 
 interface ScrollListProps {
   list: Pokemon[];
@@ -39,102 +39,73 @@ export const ScrollList = (props: ScrollListProps) => {
     ttsEnabled = false,
   } = props;
   const scrollCountRef = useRef(0);
-  const scrollDivRef = useRef<null | HTMLDivElement>(null);
   const scrollInProgressRef = useRef(false);
-  const scrollStartedRef = useRef(false);
-  const { height: windowHeight } = useWindowSize();
 
-  useKeys({
-    handlers: {
-      [Keys.LEFT]: () => {
-        if (!focused || scrollInProgressRef.current) {
-          return;
-        }
+  const keyHandlers = useMemo(
+    () => ({
+      handlers: {
+        [Keys.LEFT]: () => {
+          if (!focused || scrollInProgressRef.current) {
+            return;
+          }
 
-        if (scrollInProgressRef.current) {
-          return;
-        }
-        moveLeft({
-          maxIndex: list.length - 1,
-        });
-      },
-      [Keys.RIGHT]: () => {
-        if (!focused || scrollInProgressRef.current) {
-          return;
-        }
-
-        moveRight({
-          maxIndex: list.length - 1,
-        });
-      },
-    },
-  });
-
-  useEffect(() => {
-    if (focused) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting && focused) {
-              const { boundingClientRect } = entry;
-              if (boundingClientRect.bottom > windowHeight) {
-                if (!scrollStartedRef.current) {
-                  scrollParent(false);
-                }
-              } else if (focused) {
-                if (!scrollStartedRef.current) {
-                  scrollParent(true);
-                }
-              }
-              scrollStartedRef.current = true;
-            }
+          if (scrollInProgressRef.current) {
+            return;
+          }
+          moveLeft({
+            maxIndex: list.length - 1,
           });
         },
-        { root: null, rootMargin: "0px", threshold: 1.0 }
-      );
+        [Keys.RIGHT]: () => {
+          if (!focused || scrollInProgressRef.current) {
+            return;
+          }
 
-      if (scrollDivRef.current) {
-        observer.observe(scrollDivRef.current);
+          moveRight({
+            maxIndex: list.length - 1,
+          });
+        },
+      },
+    }),
+    [focused, list.length, moveLeft, moveRight]
+  );
+
+  useKeys(keyHandlers);
+  const entryRef = useObserver({
+    focused,
+    scrollParent,
+    isVertical: true,
+  });
+
+  const scroll = useCallback(
+    (reverse: boolean = false) => {
+      if (!entryRef.current) {
+        return;
       }
 
-      return () => {
-        if (scrollDivRef.current) {
-          observer.unobserve(scrollDivRef.current);
-        }
-      };
-    }
-  }, [focused, scrollParent, windowHeight, yIndex]);
+      const div = entryRef.current;
+      const newCount = scrollCountRef.current + (reverse ? -1 : 1);
 
-  const scroll = (reverse: boolean = false) => {
-    if (!scrollDivRef.current) {
-      return;
-    }
+      if (newCount >= 0 && newCount < list.length) {
+        scrollCountRef.current = newCount;
+        setScrollCount(yIndex, newCount);
+      }
 
-    const div = scrollDivRef.current;
-    const newCount = scrollCountRef.current + (reverse ? -1 : 1);
-
-    if (newCount >= 0 && newCount < list.length) {
-      scrollCountRef.current = newCount;
-      setScrollCount(yIndex, newCount);
-    }
-
-    div.scrollBy({
-      left: reverse ? -(itemWidth + gapSize) : itemWidth + gapSize,
-    });
-    // throttle keys to avoid bad state
-    scrollInProgressRef.current = true;
-    setTimeout(() => {
-      scrollInProgressRef.current = false;
-    }, 400);
-  };
-
-  useEffect(() => {
-    scrollStartedRef.current = false;
-  }, [focused]);
+      div.scrollBy({
+        left: reverse ? -(itemWidth + gapSize) : itemWidth + gapSize,
+      });
+      // throttle keys to avoid bad state
+      scrollInProgressRef.current = true;
+      setTimeout(() => {
+        scrollInProgressRef.current = false;
+      }, 400);
+    },
+    [entryRef, gapSize, itemWidth, list.length, setScrollCount, yIndex]
+  );
 
   return (
     <>
-      <div className="scroll-list" ref={scrollDivRef}>
+      <div className="scroll-list" ref={entryRef}>
         {list.map((item, i) => (
           <ScrollItem
             scroll={scroll}
