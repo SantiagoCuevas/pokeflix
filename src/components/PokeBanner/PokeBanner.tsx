@@ -37,6 +37,14 @@ export const PokeBanner = (props: PokeBannerProps) => {
                 </div>
               ))}
             </div>
+            {!loading && (
+              <div className="poke-instructions">
+                <h3>NAVIGATE WITH THE ARROW KEYS</h3>
+                <h3>
+                  PRESS <b>ENTER</b> TO HEAR THEIR SOUND
+                </h3>
+              </div>
+            )}
           </div>
         </div>
         <div className="poke-gif-container">
