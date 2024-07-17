@@ -62,7 +62,7 @@ export const PokeBanner = (props: PokeBannerProps) => {
               {type} TYPE - GENERATION {generation}
             </h2>
             <div className="poke-stats-container">
-              {pk?.stats?.map((stat) => (
+              {pk?.stats?.map((stat: any) => (
                 <div className="poke-stat-pill">
                   <div className="poke-stat-label">
                     {stat.stat.name.toUpperCase()}: {stat.base_stat}

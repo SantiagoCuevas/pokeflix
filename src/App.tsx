@@ -79,7 +79,7 @@ function App() {
   const sortedPokemonLists = useMemo(
     () =>
       data?.map((list) =>
-        list.sort((a, b) => {
+        list.sort((a: any, b: any) => {
           if (a.name < b.name) {
             return -1;
           }

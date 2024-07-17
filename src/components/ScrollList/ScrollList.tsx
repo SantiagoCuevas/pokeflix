@@ -134,7 +134,7 @@ export const ScrollList = (props: ScrollListProps) => {
   return (
     <>
       <div className="scroll-list" ref={scrollDivRef}>
-        {list.map((item, i) => (
+        {list.map((item: any, i) => (
           <ScrollItem
             scroll={scroll}
             key={`gen-${yIndex}-${item?.name}`}

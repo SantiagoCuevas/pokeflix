@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const generationsUrl =
   "https://pokeapi.co/api/v2/generation/?limit=100000&offset=0";
@@ -17,7 +17,7 @@ export const usePokemonData = () => {
 
       const genData = await Promise.all(genRequests);
       const pokeRequests = genData.map((res) =>
-        res.data.pokemon_species.map((poke) =>
+        res.data.pokemon_species.map((poke: any) =>
           axios.get(`https://pokeapi.co/api/v2/pokemon/${poke.name}`)
         )
       );
@@ -25,7 +25,7 @@ export const usePokemonData = () => {
       const pokemonData = [];
       for (let i = 0; i < pokeRequests.length; i++) {
         const results: any[] = [];
-        pokeRequests[i].forEach(async (element) => {
+        pokeRequests[i].forEach(async (element: any) => {
           const { data } = await element;
           results.push(data);
         });
