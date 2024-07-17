@@ -3,7 +3,8 @@ import "./ScrollList.css";
 import { Keys } from "../../types/Keys";
 import { NavigationOptions } from "../../hooks/useGridManager/useGridManager";
 import { useKeys } from "../../hooks/useKeys/useKeys";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useWindowSize } from "../../hooks/useWindowSize/useWindowSize";
 
 interface ScrollListProps {
   list: { title: string }[];
@@ -14,6 +15,7 @@ interface ScrollListProps {
   moveRight: (navOptions: NavigationOptions) => void;
   moveLeft: (navOptions: NavigationOptions) => void;
   setScrollCount: (targetIndex: number, count: number) => void;
+  scroll: (reverse: boolean) => void;
   focused?: boolean;
   circular?: boolean;
 }
@@ -26,6 +28,7 @@ export const ScrollList = (props: ScrollListProps) => {
     yIndex,
     itemWidth,
     gapSize,
+    scroll: scrollParent,
     moveRight,
     moveLeft,
     setScrollCount,
@@ -33,6 +36,8 @@ export const ScrollList = (props: ScrollListProps) => {
   const scrollCountRef = useRef(0);
   const scrollDivRef = useRef<null | HTMLDivElement>(null);
   const scrollInProgressRef = useRef(false);
+  const scrollStartedRef = useRef(false);
+  const { height: windowHeight } = useWindowSize();
 
   useKeys({
     handlers: {
@@ -60,6 +65,43 @@ export const ScrollList = (props: ScrollListProps) => {
     },
   });
 
+  useEffect(() => {
+    if (focused) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting && focused) {
+              const { boundingClientRect } = entry;
+              if (boundingClientRect.bottom > windowHeight) {
+                if (!scrollStartedRef.current) {
+                  console.log("zz made it here");
+
+                  scrollParent(false);
+                }
+              } else if (focused) {
+                if (!scrollStartedRef.current) {
+                  scrollParent(true);
+                }
+              }
+              scrollStartedRef.current = true;
+            }
+          });
+        },
+        { root: null, rootMargin: "0px", threshold: 1.0 }
+      );
+
+      if (scrollDivRef.current) {
+        observer.observe(scrollDivRef.current);
+      }
+
+      return () => {
+        if (scrollDivRef.current) {
+          observer.unobserve(scrollDivRef.current);
+        }
+      };
+    }
+  }, [focused, scrollParent, windowHeight, yIndex]);
+
   const scroll = (reverse: boolean = false) => {
     if (!scrollDivRef.current) {
       return;
@@ -80,8 +122,12 @@ export const ScrollList = (props: ScrollListProps) => {
     scrollInProgressRef.current = true;
     setTimeout(() => {
       scrollInProgressRef.current = false;
-    }, 200);
+    }, 350);
   };
+
+  useEffect(() => {
+    scrollStartedRef.current = false;
+  }, [focused]);
 
   return (
     <div className="scroll-list" ref={scrollDivRef}>

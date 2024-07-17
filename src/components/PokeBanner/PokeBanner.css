@@ -2,5 +2,14 @@
   height: 55vh;
   width: 100vw;
   background-color: purple;
+  position: fixed;
+  top: 0;
+  z-index: 100;
+}
+
+.fake {
+  height: 55vh;
+  width: 100vw;
+  z-index: 100;
   margin-bottom: 20px;
 }

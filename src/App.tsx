@@ -5,6 +5,7 @@ import { useGridManager } from "./hooks/useGridManager/useGridManager";
 import { useKeys } from "./hooks/useKeys/useKeys";
 import { Keys } from "./types/Keys";
 import { PokeBanner } from "./components/PokeBanner/PokeBanner";
+import { useRef } from "react";
 
 function App() {
   const {
@@ -16,6 +17,7 @@ function App() {
     moveDown,
     setScrollCount,
   } = useGridManager();
+  const scrollInProgressRef = useRef(false);
   const arr = [
     { title: "Jason" },
     { title: "Zac" },
@@ -29,19 +31,38 @@ function App() {
     { title: "Henry" },
     { title: "Jesus" },
   ];
-  const lists = [arr, arr, arr];
+  const lists = [arr, arr, arr, arr, arr];
   useKeys({
     handlers: {
       [Keys.UP]: () => {
+        if (scrollInProgressRef.current) {
+          return;
+        }
         moveUp();
       },
       [Keys.DOWN]: () => {
+        if (scrollInProgressRef.current) {
+          return;
+        }
         moveDown({
           maxIndex: lists.length - 1,
         });
       },
     },
   });
+
+  const scroll = (reverse: boolean = false) => {
+    window.scrollBy({
+      top: reverse ? -(240 + 20) : 240 + 20,
+      behavior: "smooth",
+    });
+    // throttle keys to avoid bad state
+    scrollInProgressRef.current = true;
+    setTimeout(() => {
+      scrollInProgressRef.current = false;
+    }, 350);
+  };
+
   return (
     <>
       <PokeBanner />
@@ -58,8 +79,10 @@ function App() {
             moveRight={moveRight}
             moveLeft={moveLeft}
             setScrollCount={setScrollCount}
+            scroll={scroll}
           />
         ))}
+        <div style={{ height: 255, width: "100%" }} />
       </div>
     </>
   );
