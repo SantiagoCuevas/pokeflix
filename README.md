@@ -1,31 +1,47 @@
-# React + TypeScript + Vite
+# PokeFlix
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Video of PokeFlix in action](./screenshots/video.gif)
 
-Currently, two official plugins are available:
+PokeFlix is a [Pokedex](https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9dex) application with a Netflix-like TV style user interface built with React. All Pokemon data courtesy of [PokeAPI](https://pokeapi.co).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Website
 
-## Expanding the ESLint configuration
+You can try out PokeFlix [here.](https://main--magenta-pavlova-6f3755.netlify.app/)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Controls
 
-- Configure the top-level `parserOptions` property like this:
+PokeFlix is meant to be used like an application on a smart TV. Use the arrow keys and the enter button to simulate the remote. Pokemon buttons can be selected to hear their sounds. Navigate up to the "text to speech mode" toggle and select it to toggle the mode on and off. The text to speech mode was built to simulate a rudimentary version of the accessibility options found on TVs and other devices.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+## Screenshots
+
+![The PokeFlix app on launch](./screenshots/bulbasaur.png)
+
+![The TTS mode toggle button in focus](./screenshots/ttsmode.png)
+
+## Installation and Setup Instructions
+
+Clone this repository. You will need Yarn and npm installed globally on your machine.
+
+Installation:
+
+```
+yarn install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
-# pokeflix
+To Run Test Suite:
+
+```
+yarn test
+```
+
+To Start Server:
+
+```
+yarn dev
+```
+
+To Visit App:
+
+```
+localhost:5173
+```
