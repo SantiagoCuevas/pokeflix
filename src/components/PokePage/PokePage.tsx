@@ -31,7 +31,7 @@ export const PokePage = () => {
     () => ({
       handlers: {
         [Keys.UP]: () => {
-          if (scrollInProgressRef.current) {
+          if (scrollInProgressRef.current || !data?.length) {
             return;
           }
 
