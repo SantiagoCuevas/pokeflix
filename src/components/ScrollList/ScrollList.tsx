@@ -32,14 +32,27 @@ export const ScrollList = (props: ScrollListProps) => {
   } = props;
   const scrollCountRef = useRef(0);
   const scrollDivRef = useRef<null | HTMLDivElement>(null);
+  const scrollInProgressRef = useRef(false);
+
   useKeys({
     handlers: {
       [Keys.LEFT]: () => {
+        if (!focused || scrollInProgressRef.current) {
+          return;
+        }
+
+        if (scrollInProgressRef.current) {
+          return;
+        }
         moveLeft({
           maxIndex: list.length - 1,
         });
       },
       [Keys.RIGHT]: () => {
+        if (!focused || scrollInProgressRef.current) {
+          return;
+        }
+
         moveRight({
           maxIndex: list.length - 1,
         });
@@ -63,6 +76,11 @@ export const ScrollList = (props: ScrollListProps) => {
     div.scrollBy({
       left: reverse ? -(itemWidth + gapSize) : itemWidth + gapSize,
     });
+    // throttle keys to avoid bad state
+    scrollInProgressRef.current = true;
+    setTimeout(() => {
+      scrollInProgressRef.current = false;
+    }, 200);
   };
 
   return (
@@ -76,7 +94,7 @@ export const ScrollList = (props: ScrollListProps) => {
           yIndex={yIndex}
         />
       ))}
-      <div style={{ minWidth: 60, height: 200 }} />
+      <div style={{ minWidth: 100, height: 200 }} />
     </div>
   );
 };
