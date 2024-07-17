@@ -15,13 +15,3 @@ body::-webkit-scrollbar {
   background: transparent; /* make scrollbar transparent */
   display: none;
 }
-
-.page-container {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  scrollbar-width: none;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  overflow: scroll;
-}
