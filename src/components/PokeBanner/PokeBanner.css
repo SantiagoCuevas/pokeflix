@@ -1,15 +1,44 @@
 .poke-banner {
   height: 55vh;
   width: 100vw;
-  background-color: purple;
+  background-color: #df4342;
   position: fixed;
   top: 0;
   z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
 }
 
 .fake {
   height: 55vh;
   width: 100vw;
-  z-index: 100;
-  margin-bottom: 20px;
+  margin-bottom: 60px;
+}
+
+.poke-card {
+  display: flex;
+  width: 45%;
+  background-color: #df4342;
+}
+
+.poke-gif-container {
+  width: 55%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  border: 20px solid #dedede;
+  border-radius: 12px;
+}
+
+.poke-gif {
+  min-width: 250px;
+  max-height: 350px;
+  z-index: 55;
+}
+
+.poke-metadata {
+  display: flex;
+  flex-direction: column;
 }

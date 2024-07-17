@@ -5,9 +5,13 @@ import { useGridManager } from "./hooks/useGridManager/useGridManager";
 import { useKeys } from "./hooks/useKeys/useKeys";
 import { Keys } from "./types/Keys";
 import { PokeBanner } from "./components/PokeBanner/PokeBanner";
-import { useRef } from "react";
+import { act, useEffect, useRef, useState } from "react";
+import { usePokemonData } from "./hooks/usePokemonData/usePokemonData";
 
 function App() {
+  const data: null | any[] = usePokemonData();
+  const [activePokemon, setActivePokemon] = useState<any>(null);
+  const [ttsEnabled, setTtsEnabled] = useState(false);
   const {
     yIndex,
     xIndex,
@@ -18,6 +22,7 @@ function App() {
     setScrollCount,
   } = useGridManager();
   const scrollInProgressRef = useRef(false);
+  const [forceRender, setForceRender] = useState(false);
   const arr = [
     { title: "Jason" },
     { title: "Zac" },
@@ -63,13 +68,27 @@ function App() {
     }, 350);
   };
 
+  useEffect(() => {
+    setTimeout(() => {
+      setForceRender(true);
+    }, 250);
+  }, []);
+
+  useEffect(() => {
+    console.log("new active pokemon", activePokemon);
+  }, [activePokemon]);
+
+  if (!data?.length) {
+    return <h1>Loading...</h1>;
+  }
+
   return (
     <>
-      <PokeBanner />
+      <PokeBanner pk={activePokemon} />
       <div className="page-container">
-        {lists.map((list, i) => (
+        {data?.map((list: any, i: number) => (
           <ScrollList
-            key={i}
+            key={`generation-${i}`}
             list={list}
             focused={i === yIndex}
             xIndex={xIndex}
@@ -80,9 +99,11 @@ function App() {
             moveLeft={moveLeft}
             setScrollCount={setScrollCount}
             scroll={scroll}
+            setActivePokemon={setActivePokemon}
+            ttsEnabled={ttsEnabled}
           />
         ))}
-        <div style={{ height: 255, width: "100%" }} />
+        <div style={{ height: 320, width: "100%" }} />
       </div>
     </>
   );

@@ -16,8 +16,10 @@ interface ScrollListProps {
   moveLeft: (navOptions: NavigationOptions) => void;
   setScrollCount: (targetIndex: number, count: number) => void;
   scroll: (reverse: boolean) => void;
+  setActivePokemon: (pk: any) => void;
   focused?: boolean;
   circular?: boolean;
+  ttsEnabled?: boolean;
 }
 
 export const ScrollList = (props: ScrollListProps) => {
@@ -32,6 +34,8 @@ export const ScrollList = (props: ScrollListProps) => {
     moveRight,
     moveLeft,
     setScrollCount,
+    setActivePokemon,
+    ttsEnabled = false,
   } = props;
   const scrollCountRef = useRef(0);
   const scrollDivRef = useRef<null | HTMLDivElement>(null);
@@ -134,10 +138,13 @@ export const ScrollList = (props: ScrollListProps) => {
       {list.map((item, i) => (
         <ScrollItem
           scroll={scroll}
-          key={`${yIndex}-${item.title}`}
-          title={item.title}
+          key={`${item?.name ? item.name : "not working"}`}
+          title={item?.name ? item.name : "not working"}
           focused={focused && xIndex === i}
           yIndex={yIndex}
+          pk={list[i]}
+          setActivePokemon={setActivePokemon}
+          ttsEnabled={ttsEnabled}
         />
       ))}
       <div style={{ minWidth: 100, height: 200 }} />
