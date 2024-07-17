@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useWindowSize } from "../../hooks/useWindowSize/useWindowSize";
 import { useKeys } from "../../hooks/useKeys/useKeys";
 import { Keys } from "../../types/Keys";
+import pokeLoader from "../../assets/pokeloader.gif";
 
 export interface ScrollItemProps {
   title: string;
@@ -26,6 +27,7 @@ export const ScrollItem = (props: ScrollItemProps) => {
   const ref = useRef<null | HTMLDivElement>(null);
   const scrollStartedRef = useRef(false);
   const { width: windowWidth } = useWindowSize();
+  const imgRef = useRef<HTMLImageElement>(null);
 
   const keyHandlers = useMemo(
     () => ({
@@ -100,7 +102,21 @@ export const ScrollItem = (props: ScrollItemProps) => {
 
   return (
     <div ref={ref} className="scroll-item" data-focused={focused}>
-      <h1>{title?.toUpperCase()}</h1>
+      <img
+        src={pokeLoader}
+        className="scroll-item-image"
+        ref={imgRef}
+        onLoad={() => {
+          if (!imgRef.current) {
+            return;
+          }
+          // show pokeball loader while waiting for real images
+          if (imgRef.current.src !== pk.sprites.front_default) {
+            imgRef.current.src = pk.sprites.front_default;
+          }
+        }}
+      />
+      <h2>{title?.toUpperCase()}</h2>
     </div>
   );
 };

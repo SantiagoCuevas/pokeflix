@@ -27,8 +27,14 @@
   transition: transform 0.25s linear;
   border-radius: 12px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.scroll-item-image {
+  min-height: 150px;
+  max-height: 150px;
 }
 
 .scroll-item[data-focused="true"] {
