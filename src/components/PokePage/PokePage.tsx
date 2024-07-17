@@ -81,22 +81,6 @@ export const PokePage = () => {
     }, 1000);
   }, []);
 
-  const sortedPokemonLists = useMemo(
-    () =>
-      data?.map((list) =>
-        list.sort((a: any, b: any) => {
-          if (a.name < b.name) {
-            return -1;
-          }
-          if (a.name > b.name) {
-            return 1;
-          }
-          return 0;
-        })
-      ),
-    [data]
-  );
-
   return (
     <>
       <PokeBanner
@@ -110,10 +94,10 @@ export const PokePage = () => {
       />
       <div className="page-container">
         {!loading &&
-          sortedPokemonLists?.map((list: any, i: number) => (
+          data?.map((gen, i) => (
             <ScrollList
-              key={`generation-list`}
-              list={list}
+              key={gen.name}
+              list={gen.pokemon}
               focused={i === yIndex && !bannerFocused && !loading}
               activeXIndex={xIndex}
               yIndex={i}

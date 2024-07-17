@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { Pokemon } from "../../types/Pokemon";
+import { PokemonGeneration } from "../../types/PokemonGeneration";
 
 const generationsUrl =
   "https://pokeapi.co/api/v2/generation/?limit=100000&offset=0";
 export const usePokemonData = () => {
-  const [data, setData] = useState<null | Array<Pokemon[]>>(null);
+  const [data, setData] = useState<null | Array<PokemonGeneration>>(null);
   const startedFetchRef = useRef(false);
 
   useEffect(() => {
@@ -34,7 +34,11 @@ export const usePokemonData = () => {
           pokemonData.push(results);
         }
 
-        setData(pokemonData);
+        const output = pokemonData.map((pokeArr, index) => ({
+          name: generationList.results[index].name,
+          pokemon: pokeArr,
+        }));
+        setData(output);
       } catch (e) {
         console.log(e);
       }
