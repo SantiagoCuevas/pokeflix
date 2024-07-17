@@ -9,7 +9,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { usePokemonData } from "./hooks/usePokemonData/usePokemonData";
 
 function App() {
-  const data: null | any[] = usePokemonData();
+  const data = usePokemonData();
   const [activePokemon, setActivePokemon] = useState<any>(null);
   const [activeGeneration, setActiveGeneration] = useState(1);
   const [ttsEnabled, setTtsEnabled] = useState(false);

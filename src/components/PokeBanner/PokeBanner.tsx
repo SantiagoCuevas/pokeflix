@@ -3,9 +3,10 @@ import pokeballLoader from "../../assets/pokeloader.gif";
 import { useKeys } from "../../hooks/useKeys/useKeys";
 import { useMemo } from "react";
 import { Keys } from "../../types/Keys";
+import { Pokemon } from "../../types/Pokemon";
 
 interface PokeBannerProps {
-  pk: any;
+  pk?: Pokemon;
   activeGeneration: number;
   ttsEnabled: boolean;
   setBannerFocused: (isFocused: boolean) => void;
