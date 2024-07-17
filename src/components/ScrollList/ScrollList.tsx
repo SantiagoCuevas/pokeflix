@@ -1,4 +1,3 @@
-import { ScrollItem } from "./ScrollItem";
 import "./ScrollList.css";
 import { Keys } from "../../types/Keys";
 import { NavigationOptions } from "../../hooks/useGridManager/useGridManager";
