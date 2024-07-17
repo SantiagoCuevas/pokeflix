@@ -17,11 +17,9 @@ export const usePokemonData = () => {
 
       const genData = await Promise.all(genRequests);
       const pokeRequests = genData.map((res) =>
-        res.data.pokemon_species
-          .slice(0, 20)
-          .map((poke) =>
-            axios.get(`https://pokeapi.co/api/v2/pokemon/${poke.name}`)
-          )
+        res.data.pokemon_species.map((poke) =>
+          axios.get(`https://pokeapi.co/api/v2/pokemon/${poke.name}`)
+        )
       );
 
       const pokemonData = [];

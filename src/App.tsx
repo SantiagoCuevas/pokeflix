@@ -22,7 +22,7 @@ function App() {
     setScrollCount,
   } = useGridManager();
   const scrollInProgressRef = useRef(false);
-  const [forceRender, setForceRender] = useState(false);
+  const [loading, setLoading] = useState(true);
   const arr = [
     { title: "Jason" },
     { title: "Zac" },
@@ -68,41 +68,39 @@ function App() {
     }, 350);
   };
 
+  // False loading state for visual effect
   useEffect(() => {
     setTimeout(() => {
-      setForceRender(true);
-    }, 250);
+      setLoading(false);
+    }, 1000);
   }, []);
 
   useEffect(() => {
-    console.log("new active pokemon", activePokemon);
+    console.log("new active pokemon", activePokemon?.stats);
   }, [activePokemon]);
-
-  if (!data?.length) {
-    return <h1>Loading...</h1>;
-  }
 
   return (
     <>
       <PokeBanner pk={activePokemon} />
       <div className="page-container">
-        {data?.map((list: any, i: number) => (
-          <ScrollList
-            key={`generation-${i}`}
-            list={list}
-            focused={i === yIndex}
-            xIndex={xIndex}
-            yIndex={i}
-            itemWidth={350}
-            gapSize={20}
-            moveRight={moveRight}
-            moveLeft={moveLeft}
-            setScrollCount={setScrollCount}
-            scroll={scroll}
-            setActivePokemon={setActivePokemon}
-            ttsEnabled={ttsEnabled}
-          />
-        ))}
+        {!loading &&
+          data?.map((list: any, i: number) => (
+            <ScrollList
+              key={`generation-list`}
+              list={list}
+              focused={i === yIndex && !loading}
+              xIndex={xIndex}
+              yIndex={i}
+              itemWidth={350}
+              gapSize={20}
+              moveRight={moveRight}
+              moveLeft={moveLeft}
+              setScrollCount={setScrollCount}
+              scroll={scroll}
+              setActivePokemon={setActivePokemon}
+              ttsEnabled={ttsEnabled}
+            />
+          ))}
         <div style={{ height: 320, width: "100%" }} />
       </div>
     </>

@@ -78,8 +78,6 @@ export const ScrollList = (props: ScrollListProps) => {
               const { boundingClientRect } = entry;
               if (boundingClientRect.bottom > windowHeight) {
                 if (!scrollStartedRef.current) {
-                  console.log("zz made it here");
-
                   scrollParent(false);
                 }
               } else if (focused) {
@@ -126,7 +124,7 @@ export const ScrollList = (props: ScrollListProps) => {
     scrollInProgressRef.current = true;
     setTimeout(() => {
       scrollInProgressRef.current = false;
-    }, 350);
+    }, 400);
   };
 
   useEffect(() => {

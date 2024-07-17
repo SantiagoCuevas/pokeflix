@@ -36,7 +36,6 @@ export const ScrollItem = (props: ScrollItemProps) => {
           }
 
           const cryAudioFile = pk.cries.latest;
-          console.log(cryAudioFile);
           if (!cryAudioFile) {
             return;
           }
